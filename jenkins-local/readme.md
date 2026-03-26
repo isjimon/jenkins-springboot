@@ -1,0 +1,1 @@
+kubectl port-forward svc/jenkins-service -n devops-tools 8081:8081
