@@ -5,4 +5,10 @@ $ brew install ngrok
 $ ngrok config add-authtoken <authtoken>
 $ ngrok http 8081
 
-Note: In Jenins, no need to setup Jenkins URL, and allow anoymous access (security)
+Note:
+- In github repo, go setting then webhook
+    https://<ngrok URL>/github-webhook/
+    content-type: application/json
+    Enable SSL verification
+    Just the push event
+- In Jenins, no need to setup Jenkins URL, and allow anoymous access (security)

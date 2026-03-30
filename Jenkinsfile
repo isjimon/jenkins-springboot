@@ -10,7 +10,7 @@ pipeline {
         stage('Build app') {
             steps {
                 echo 'Building java app via maven tool...'
-                sh 'cd rest-api-demo'
+                sh 'cd rest-api-demo/'
                 sh 'mvn -B -DskipTests clean package'
             }
         }
