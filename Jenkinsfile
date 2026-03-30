@@ -19,6 +19,8 @@ pipeline {
                 sh 'pwd'
                 sh 'ls -al'
                 sh 'cd rest-api-demo/'
+                sh 'pwd'
+                sh 'ls -al'
                 sh 'mvn -B -DskipTests clean package'
             }
         }
