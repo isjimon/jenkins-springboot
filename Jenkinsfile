@@ -1,40 +1,47 @@
 pipeline {
     agent any
 
+    tools {
+        maven Maven 3.19.14
+
+    }
+
     stages {
-        stage('Initialize') {
+        stage('Build app') {
             steps {
-                echo 'Initializing pipeline...'
+                echo 'Building java app via maven tool...'
+                cd rest-api-demo
+                sh 'mvn -B -DskipTests clean package'
             }
         }
 
-        stage('Checkout') {
+        stage('Push App') {
             steps {
-                echo 'Checking out source code...'
+                echo 'Pushing jar file to nexus...'
             }
         }
 
-        stage('Build') {
+        stage('Build Docker') {
             steps {
-                echo 'Building the project...'
+                echo 'Building Docker image...'
             }
         }
 
-        stage('Test') {
+        stage('Push Docker Image') {
             steps {
-                echo 'Running tests...'
+                echo 'Pushing Docker image to DockerHub...'
             }
         }
 
-        stage('Package') {
+        stage('Deploy to Kubernetes') {
             steps {
-                echo 'Packaging application...'
+                echo 'Deploying app to Kubernetes cluster...'
             }
         }
 
-        stage('Deploy') {
+        stage('Testing') {
             steps {
-                echo 'Deploying application...'
+                echo 'Testing API endpoints...'
             }
         }
     }
