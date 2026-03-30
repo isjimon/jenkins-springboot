@@ -3,13 +3,21 @@ pipeline {
 
     tools {
         maven 'Maven 3.9.14'
-
     }
 
     stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build app') {
             steps {
                 echo 'Building java app via maven tool...'
+                sh 'pwd'
+                sh 'ls -al'
                 sh 'cd rest-api-demo/'
                 sh 'mvn -B -DskipTests clean package'
             }
