@@ -42,3 +42,10 @@ Create local cluster
 $ kind create cluster
 ```
 
+
+# run stuff
+```
+$ kubectl port-forward svc/jenkins-service -n devops-tools 8081:8081
+$ ngrok config add-authtoken <authtoken>
+$ ngrok http 8081
+```

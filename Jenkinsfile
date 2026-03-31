@@ -15,12 +15,7 @@ pipeline {
 
         stage('Build app') {
             steps {
-                echo 'Building java app via maven tool...'
-                sh 'pwd'
-                sh 'ls -al'
-                sh 'cd rest-api-demo/'
-                sh 'pwd'
-                
+                echo 'Building java app via maven tool...'            
                 dir('rest-api-demo') {
                     sh 'pwd'
                     sh 'ls -al'
