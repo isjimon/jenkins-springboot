@@ -1,7 +1,7 @@
 # Project: Jenkins + Springboot
 
 ## Overview
-To run jenkins pipeline locally that would deploy a simple rest api java applications.
+To run jenkins pipeline locally that would deploy a simple rest api java applications
 
 Pipeline Stages (Trigger: Push on main branch)
 - Build jar via maven
