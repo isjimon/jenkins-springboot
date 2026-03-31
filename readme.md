@@ -43,9 +43,50 @@ $ kind create cluster
 ```
 
 
-# run stuff
+
+## Components
+
+### /jenkins-local
+
+Deploy jenkins on local Kind cluster
 ```
+$ kubectl apply -f /jenkins-local
+```
+Expose on service and access it on localhost:8081
+``` 
 $ kubectl port-forward svc/jenkins-service -n devops-tools 8081:8081
+```
+
+Enable auto trigger of pipelines in Jenkins
+
+1. Use ngrok to expose jenkins publicly
+```
+$ brew install ngrok
 $ ngrok config add-authtoken <authtoken>
 $ ngrok http 8081
+```
+
+Note:
+- In github repo, go setting then webhook
+```
+    https://<ngrok URL>/github-webhook/
+    content-type: application/json
+    Enable SSL verification
+    Just the push event
+```
+- In Jenkins, no need to setup Jenkins URL, and allow anoymous access (security)
+- In Jenkins, when adding source to multibranch pipeline, make sure to select Github and NOT git
+
+
+### /nexus
+Run nexus on local machine
+```
+$ cd nexus/
+$ docker compose up -d
+```
+
+### /rest-api-demo
+build jar file at rest-api-demo/target/rest-api-demo-0.0.1-SNAPSHOT.jar
+```
+$ mvn clean install
 ```
