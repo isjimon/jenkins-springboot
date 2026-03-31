@@ -12,3 +12,4 @@ Note:
     Enable SSL verification
     Just the push event
 - In Jenins, no need to setup Jenkins URL, and allow anoymous access (security)
+- In Jenkins, when adding source to multibranch pipeline, make sure to select Github and NOT git
