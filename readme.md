@@ -126,6 +126,9 @@ $ docker run -p 8080:8080 isji/rest-api-demo
 
 install kubernetes plugin in jenkins
 configure k8s on jenkins. config > cloud > kubernetes
+    Kubernetes URL : https://kubernetes.default.svc
+    Kubernetes Namespace: devops-tools
+    Jenkins URL: https://maneuverable-imponderably-ossie.ngrok-free.dev/
 
 docker login
 kubectl create secret generic docker-config \

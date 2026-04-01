@@ -1,14 +1,15 @@
 pipeline {
     // agent any
 
-      agent {
+    agent {
         kubernetes {
-            cloud 'kind-cluster' 
-            yaml """
-                apiVersion: v1
-                kind: Pod
-                spec:
-                containers:
+            cloud 'kind-cluster'
+            defaultContainer 'kaniko'
+            yaml '''
+            apiVersion: v1
+            kind: Pod
+            spec:
+            containers:
                 - name: kaniko
                   image: gcr.io/kaniko-project/executor:latest
                   command:
@@ -17,11 +18,11 @@ pipeline {
                   volumeMounts:
                     - name: docker-config
                       mountPath: /kaniko/.docker
-                volumes:
+            volumes:
                 - name: docker-config
                   secret:
                     secretName: docker-config
-            """
+            '''
         }
     }
 
