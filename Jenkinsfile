@@ -19,7 +19,7 @@ pipeline {
                 dir('rest-api-demo') {
                     sh 'pwd'
                     sh 'ls -al'
-                    sh 'mvn -B -DskipTests clean package'
+                    sh 'mvn -B -DskipTests package'
                 }
 
             }
@@ -35,7 +35,7 @@ pipeline {
                     )]) {
                         sh 'ls -al'
                         sh '''
-                        mvn clean deploy \
+                        mvn deploy \
                         --settings ./settings.xml
                         '''
                     }

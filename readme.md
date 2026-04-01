@@ -96,7 +96,16 @@ build jar file at rest-api-demo/target/rest-api-demo-0.0.1-SNAPSHOT.jar
 $ mvn clean install
 ```
 
-push to nexus
+depoy to nexus
+update pom.xml, add these lines. For the ip:  `$ ipconfig getifaddr en0`
+```
+	<distributionManagement>
+		<repository>
+			<id>nexus</id>
+			<url> http://<ip>/repository/maven-snapshots/ </url>
+		</repository>
+	</distributionManagement>
+```
 ```
 $ export NEXUS_USER=admin
 $ export NEXUS_PASS=password
