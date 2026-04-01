@@ -27,16 +27,18 @@ pipeline {
 
         stage('Build & Deploy to Nexus') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'nexus-creds',
-                    usernameVariable: 'NEXUS_USER',
-                    passwordVariable: 'NEXUS_PASS'
-                )]) {
-                    sh 'ls -al'
-                    sh '''
-                    mvn clean deploy \
-                      --settings ./settings.xml
-                    '''
+                dir('rest-api-demo') {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'nexus-creds',
+                        usernameVariable: 'NEXUS_USER',
+                        passwordVariable: 'NEXUS_PASS'
+                    )]) {
+                        sh 'ls -al'
+                        sh '''
+                        mvn clean deploy \
+                        --settings ./settings.xml
+                        '''
+                    }
                 }
             }
         }
