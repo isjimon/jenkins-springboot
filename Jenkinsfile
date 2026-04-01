@@ -25,6 +25,21 @@ pipeline {
             }
         }
 
+        stage('Build & Deploy to Nexus') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'nexus-creds',
+                    usernameVariable: 'NEXUS_USER',
+                    passwordVariable: 'NEXUS_PASS'
+                )]) {
+                    sh '''
+                    mvn clean deploy \
+                      --settings settings.xml
+                    '''
+                }
+            }
+        }
+
         stage('Push App') {
             steps {
                 echo 'Pushing jar file to nexus...'

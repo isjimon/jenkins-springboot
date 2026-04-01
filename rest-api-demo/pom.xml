@@ -51,4 +51,11 @@
 		</plugins>
 	</build>
 
+	<distributionManagement>
+		<repository>
+			<id>nexus</id>
+			<url>http://localhost:8082/repository/maven-snapshots/</url>
+		</repository>
+	</distributionManagement>
+
 </project>

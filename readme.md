@@ -85,8 +85,24 @@ $ cd nexus/
 $ docker compose up -d
 ```
 
+- Username: admin
+- Password: <generated admin password located at: /nexus-data/admin.password>
+
+Reference: https://hub.docker.com/r/sonatype/nexus3
+
 ### /rest-api-demo
 build jar file at rest-api-demo/target/rest-api-demo-0.0.1-SNAPSHOT.jar
 ```
 $ mvn clean install
+```
+
+push to nexus
+```
+$ export NEXUS_USER=admin
+$ export NEXUS_PASS=password
+$ mvn deploy --settings ./settings.xml
+```
+```
+$ NEXUS_USER=admin NEXUS_PASS=password mvn deploy --settings ./settings.xml
+```
 ```
