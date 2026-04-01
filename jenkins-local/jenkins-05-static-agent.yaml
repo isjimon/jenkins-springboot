@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-static-agent
+  namespace: devops-tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins-static-agent
+  template:
+    metadata:
+      labels:
+        app: jenkins-static-agent
+    spec:
+      serviceAccountName: jenkins-admin
+      containers:
+        - name: jnlp
+          image: jenkins/inbound-agent:latest
+          args:
+            - "$(JENKINS_SECRET)"
+            - "$(JENKINS_NAME)"
+
+        - name: kaniko
+          image: gcr.io/kaniko-project/executor:v1.23.2
+          command:
+            - sleep
+            - "infinity"
+          volumeMounts:
+            - name: docker-config
+              mountPath: /kaniko/.docker
+
+      volumes:
+        - name: docker-config
+          secret:
+            secretName: docker-config

@@ -1,30 +1,30 @@
 pipeline {
-    // agent any
+    agent any
 
-    agent {
-        kubernetes {
-            cloud 'kind-cluster'
-            defaultContainer 'kaniko'
-            yaml '''
-            apiVersion: v1
-            kind: Pod
-            spec:
-            containers:
-                - name: kaniko
-                  image: gcr.io/kaniko-project/executor:latest
-                  command:
-                    - cat
-                  tty: true
-                  volumeMounts:
-                    - name: docker-config
-                      mountPath: /kaniko/.docker
-            volumes:
-                - name: docker-config
-                  secret:
-                    secretName: docker-config
-            '''
-        }
-    }
+    // agent {
+    //     kubernetes {
+    //         cloud 'kind-cluster'
+    //         defaultContainer 'kaniko'
+    //         yaml '''
+    //         apiVersion: v1
+    //         kind: Pod
+    //         spec:
+    //         containers:
+    //             - name: kaniko
+    //               image: gcr.io/kaniko-project/executor:latest
+    //               command:
+    //                 - cat
+    //               tty: true
+    //               volumeMounts:
+    //                 - name: docker-config
+    //                   mountPath: /kaniko/.docker
+    //         volumes:
+    //             - name: docker-config
+    //               secret:
+    //                 secretName: docker-config
+    //         '''
+    //     }
+    // }
 
     tools {
         maven 'Maven 3.9.14'
@@ -67,19 +67,19 @@ pipeline {
             }
         }
 
-        stage('Build Docker') {
-            steps {
-                container('kaniko') {
-                    sh '''
-                        /kaniko/executor \
-                        --context=${WORKSPACE}/rest-api-demo \
-                        --dockerfile=${WORKSPACE}/app-deployment/Dockerfile \
-                        --destination=${IMAGE_NAME} \
-                        --verbosity=info
-                    '''
-                }
-            }
-        }
+        // stage('Build Docker') {
+        //     steps {
+        //         container('kaniko') {
+        //             sh '''
+        //                 /kaniko/executor \
+        //                 --context=${WORKSPACE}/rest-api-demo \
+        //                 --dockerfile=${WORKSPACE}/app-deployment/Dockerfile \
+        //                 --destination=${IMAGE_NAME} \
+        //                 --verbosity=info
+        //             '''
+        //         }
+        //     }
+        // }
 
         // stage('Build Docker') {
         //     steps {
