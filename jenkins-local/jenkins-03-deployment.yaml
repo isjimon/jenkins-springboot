@@ -58,16 +58,10 @@ spec:
           volumeMounts:
             - name: jenkins-data
               mountPath: /var/jenkins_home
-            - name: docker-sock
-              mountPath: /var/run/docker.sock
       volumes:
         - name: jenkins-data
           persistentVolumeClaim:
               claimName: jenkins-pv-claim
-
-        - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
 
 # If you don’t want the local storage persistent volume, you can replace the volume definition in the deployment with the host directory as shown below.
 

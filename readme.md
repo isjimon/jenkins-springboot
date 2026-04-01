@@ -123,3 +123,9 @@ $ docker build -t isji/rest-api-demo:1 -f app-deployment/Dockerfile .
 $ docker run -p 8080:8080 isji/rest-api-demo
 
 ```
+
+
+docker login
+kubectl create secret generic docker-config \
+  --from-file=.dockerconfigjson=$HOME/.docker/config.json \
+  --type=kubernetes.io/dockerconfigjson

@@ -1,5 +1,28 @@
 pipeline {
-    agent any
+    // agent any
+
+      agent {
+        kubernetes {
+            yaml """
+                apiVersion: v1
+                kind: Pod
+                spec:
+                containers:
+                - name: kaniko
+                    image: gcr.io/kaniko-project/executor:latest
+                    command:
+                    - cat
+                    tty: true
+                    volumeMounts:
+                    - name: docker-config
+                    mountPath: /kaniko/.docker
+                volumes:
+                - name: docker-config
+                    secret:
+                    secretName: docker-config
+            """
+        }
+    }
 
     tools {
         maven 'Maven 3.9.14'
@@ -44,30 +67,44 @@ pipeline {
 
         stage('Build Docker') {
             steps {
-                sh '''
-                docker build -f docker/Dockerfile \
-                -t $IMAGE_NAME:$SHORT_SHA \
-                -t $IMAGE_NAME:latest .
-                '''
-            }
-        }
-
-        stage('Push to Dockerhub ') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
+                container('kaniko') {
                     sh '''
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-
-                    docker push $IMAGE_NAME:$SHORT_SHA
-                    docker push $IMAGE_NAME:latest
+                        /kaniko/executor \
+                        --context=${WORKSPACE}/rest-api-demo \
+                        --dockerfile=${WORKSPACE}/app-deployment/Dockerfile \
+                        --destination=${IMAGE} \
+                        --verbosity=info
                     '''
                 }
             }
         }
+
+        // stage('Build Docker') {
+        //     steps {
+        //         sh '''
+        //         docker build -f docker/Dockerfile \
+        //         -t $IMAGE_NAME:$SHORT_SHA \
+        //         -t $IMAGE_NAME:latest .
+        //         '''
+        //     }
+        // }
+
+        // stage('Push to Dockerhub ') {
+        //     steps {
+        //         withCredentials([usernamePassword(
+        //             credentialsId: 'dockerhub-creds',
+        //             usernameVariable: 'DOCKER_USER',
+        //             passwordVariable: 'DOCKER_PASS'
+        //         )]) {
+        //             sh '''
+        //             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+
+        //             docker push $IMAGE_NAME:$SHORT_SHA
+        //             docker push $IMAGE_NAME:latest
+        //             '''
+        //         }
+        //     }
+        // }
 
         stage('Deploy to Kubernetes') {
             steps {
