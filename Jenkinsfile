@@ -13,18 +13,6 @@ pipeline {
             }
         }
 
-        stage('Build app') {
-            steps {
-                echo 'Building java app via maven tool...'            
-                dir('rest-api-demo') {
-                    sh 'pwd'
-                    sh 'ls -al'
-                    sh 'mvn -B -DskipTests package'
-                }
-
-            }
-        }
-
         stage('Build & Deploy to Nexus') {
             steps {
                 dir('rest-api-demo') {
@@ -35,17 +23,11 @@ pipeline {
                     )]) {
                         sh 'ls -al'
                         sh '''
-                        mvn deploy \
+                        mvn clean deploy \
                         --settings ./settings.xml
                         '''
                     }
                 }
-            }
-        }
-
-        stage('Push App') {
-            steps {
-                echo 'Pushing jar file to nexus...'
             }
         }
 
