@@ -5,8 +5,19 @@ pipeline {
         maven 'Maven 3.9.14'
     }
 
+    environment {
+        IMAGE_NAME = 'isji/rest-api-demo'
+    }
+
     stages {
 
+        stage('Prepare') {
+            steps {
+                script {
+                    env.SHORT_SHA = env.GIT_COMMIT.take(7)
+                }
+            }
+}
         stage('Checkout') {
             steps {
                 checkout scm
@@ -33,13 +44,28 @@ pipeline {
 
         stage('Build Docker') {
             steps {
-                echo 'Building Docker image...'
+                sh '''
+                docker build -f docker/Dockerfile \
+                -t $IMAGE_NAME:$SHORT_SHA \
+                -t $IMAGE_NAME:latest .
+                '''
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push to Dockerhub ') {
             steps {
-                echo 'Pushing Docker image to DockerHub...'
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+
+                    docker push $IMAGE_NAME:$SHORT_SHA
+                    docker push $IMAGE_NAME:latest
+                    '''
+                }
             }
         }
 

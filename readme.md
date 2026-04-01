@@ -114,4 +114,11 @@ $ mvn deploy --settings ./settings.xml
 ```
 $ NEXUS_USER=admin NEXUS_PASS=password mvn deploy --settings ./settings.xml
 ```
+
+## /app-deployment
+```
+$ docker build -t isji/rest-api-demo .
+$ docker build -t isji/rest-api-demo:1 -f app-deployment/Dockerfile .
+$ docker run -p 8080:8080 isji/rest-api-demo
+
 ```
