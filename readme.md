@@ -76,6 +76,7 @@ Note:
 ```
 - In Jenkins, no need to setup Jenkins URL, and allow anoymous access (security)
 - In Jenkins, when adding source to multibranch pipeline, make sure to select Github and NOT git
+- For maven, install mvn plugin to use mvn commands on pipeline
 
 
 ### /nexus
