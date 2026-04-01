@@ -124,7 +124,8 @@ $ docker run -p 8080:8080 isji/rest-api-demo
 
 ```
 
-install kubernetes plugin in jenkins .
+install kubernetes plugin in jenkins
+configure k8s on jenkins. config > cloud > kubernetes
 
 docker login
 kubectl create secret generic docker-config \
