@@ -9,16 +9,16 @@ pipeline {
                 spec:
                 containers:
                 - name: kaniko
-                    image: gcr.io/kaniko-project/executor:latest
-                    command:
+                  image: gcr.io/kaniko-project/executor:latest
+                  command:
                     - cat
-                    tty: true
-                    volumeMounts:
+                  tty: true
+                  volumeMounts:
                     - name: docker-config
-                    mountPath: /kaniko/.docker
+                      mountPath: /kaniko/.docker
                 volumes:
                 - name: docker-config
-                    secret:
+                  secret:
                     secretName: docker-config
             """
         }
