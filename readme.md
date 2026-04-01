@@ -131,3 +131,10 @@ docker login
 kubectl create secret generic docker-config \
   --from-file=.dockerconfigjson=$HOME/.docker/config.json \
   --type=kubernetes.io/dockerconfigjson
+
+
+
+kubectl exec -it jenkins-55b59f5478-jp5fc -- kubectl auth can-i create pods
+kubectl auth can-i create pods --as=system:serviceaccount:default:jenkins
+
+kubectl auth can-i create pods --as=system:serviceaccount:devops-tools:jenkins-admin

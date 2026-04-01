@@ -3,6 +3,7 @@ pipeline {
 
       agent {
         kubernetes {
+            cloud 'kind-cluster' 
             yaml """
                 apiVersion: v1
                 kind: Pod
@@ -72,7 +73,7 @@ pipeline {
                         /kaniko/executor \
                         --context=${WORKSPACE}/rest-api-demo \
                         --dockerfile=${WORKSPACE}/app-deployment/Dockerfile \
-                        --destination=${IMAGE} \
+                        --destination=${IMAGE_NAME} \
                         --verbosity=info
                     '''
                 }
