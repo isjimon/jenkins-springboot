@@ -32,9 +32,10 @@ pipeline {
                     usernameVariable: 'NEXUS_USER',
                     passwordVariable: 'NEXUS_PASS'
                 )]) {
+                    sh 'ls -al'
                     sh '''
                     mvn clean deploy \
-                      --settings settings.xml
+                      --settings ./settings.xml
                     '''
                 }
             }
