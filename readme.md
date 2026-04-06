@@ -146,3 +146,4 @@ kubectl exec -it jenkins-55b59f5478-jp5fc -- kubectl auth can-i create pods
 kubectl auth can-i create pods --as=system:serviceaccount:default:jenkins
 
 kubectl auth can-i create pods --as=system:serviceaccount:devops-tools:jenkins-admin
+

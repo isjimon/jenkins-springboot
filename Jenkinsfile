@@ -3,15 +3,17 @@ pipeline {
 
     agent {
         kubernetes {
-        yaml '''
+        yaml """
             apiVersion: v1
             kind: Pod
             spec:
             containers:
             - name: kaniko
                 image: gcr.io/kaniko-project/executor:debug
-                command: ["sleep"]
-                args: ["9999999"]
+                command:
+                - sleep
+                args: 
+                - "9999999"
                 volumeMounts:
                 - name: docker-config
                 mountPath: /kaniko/.docker
@@ -22,7 +24,7 @@ pipeline {
                 items:
                 - key: .dockerconfigjson
                     path: config.json
-        '''
+        """
         }
     }
 
