@@ -1,30 +1,30 @@
 pipeline {
-    agent any
+    // agent any
 
-    // agent {
-    //     kubernetes {
-    //         cloud 'kind-cluster'
-    //         defaultContainer 'kaniko'
-    //         yaml '''
-    //         apiVersion: v1
-    //         kind: Pod
-    //         spec:
-    //         containers:
-    //             - name: kaniko
-    //               image: gcr.io/kaniko-project/executor:latest
-    //               command:
-    //                 - cat
-    //               tty: true
-    //               volumeMounts:
-    //                 - name: docker-config
-    //                   mountPath: /kaniko/.docker
-    //         volumes:
-    //             - name: docker-config
-    //               secret:
-    //                 secretName: docker-config
-    //         '''
-    //     }
-    // }
+    agent {
+        kubernetes {
+        yaml '''
+            apiVersion: v1
+            kind: Pod
+            spec:
+            containers:
+            - name: kaniko
+                image: gcr.io/kaniko-project/executor:debug
+                command: ["sleep"]
+                args: ["9999999"]
+                volumeMounts:
+                - name: docker-config
+                mountPath: /kaniko/.docker
+            volumes:
+            - name: docker-config
+                secret:
+                secretName: docker-config
+                items:
+                - key: .dockerconfigjson
+                    path: config.json
+        '''
+        }
+    }
 
     tools {
         maven 'Maven 3.9.14'
@@ -64,6 +64,20 @@ pipeline {
                         '''
                     }
                 }
+            }
+        }
+
+        stage('Build and Push Docker') {
+            steps {
+                container('kaniko') {
+                    sh '''
+                        /kaniko/executor \
+                        --context=dir://${WORKSPACE}/app-deployment \
+                        --dockerfile=Dockerfile \
+                        --destination=isji/myapp:1
+                    '''
+                }
+    
             }
         }
 

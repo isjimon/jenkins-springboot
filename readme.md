@@ -130,6 +130,11 @@ configure k8s on jenkins. config > cloud > kubernetes
     Kubernetes Namespace: devops-tools
     Jenkins URL: https://maneuverable-imponderably-ossie.ngrok-free.dev/
 
+
+    Kubernetes URL: https://kubernetes.default.svc
+    Jenkins URL: http://jenkins-service.devops-tools.svc.cluster.local:8081
+    Jenkins Tunnel: jenkins-service.devops-tools.svc.cluster.local:50000    
+
 docker login
 kubectl create secret generic docker-config \
   --from-file=.dockerconfigjson=$HOME/.docker/config.json \
