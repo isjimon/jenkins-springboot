@@ -75,16 +75,15 @@ pipeline {
 
         stage('Build and Push Docker') {
             steps {
-                container('shell') {
+                container('kaniko') {
                     sh '''
                         /kaniko/executor \
                         --context=dir://${WORKSPACE}/app-deployment \
                         --dockerfile=Dockerfile \
-                        --destination=isji/myapp:1 \
+                        --destination=isji/myapp:${BUILD_NUMBER} \
                         --verbosity=info
                     '''
                 }
-    
             }
         }
 

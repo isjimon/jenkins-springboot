@@ -8,22 +8,12 @@ spec:
     - sleep
     args:
     - "9999999"
+    env:
+    - name: SHELL
+      value: /busybox/sh
     volumeMounts:
     - name: docker-config
       mountPath: /kaniko/.docker
-    - name: workspace-volume
-      mountPath: /workspace
-  - name: shell
-    image: alpine:3.19
-    command:
-    - sleep
-    args:
-    - "9999999"
-    volumeMounts:
-    - name: docker-config
-      mountPath: /kaniko/.docker
-    - name: workspace-volume
-      mountPath: /workspace
   volumes:
   - name: docker-config
     secret:
@@ -31,5 +21,3 @@ spec:
       items:
       - key: .dockerconfigjson
         path: config.json
-  - name: workspace-volume
-    emptyDir: {}
