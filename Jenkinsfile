@@ -73,23 +73,50 @@ pipeline {
             }
         }
 
-        stage('Debug') {
+        stage('Build') {
             steps {
-                container('kaniko') {
-                    echo "Workspace is: ${WORKSPACE}"
+                container('shell') {
+                sh 'docker build -t isji/myapp:${BUILD_NUMBER} .'
                 }
             }
         }
-
-        stage('Build and Push Docker') {
+ 
+        stage('Push') {
             steps {
-                container('kaniko') {
-                    script {
-                        sh(script: '/kaniko/executor --context=dir:///home/jenkins/agent/workspace/springboot-pipeline_main/app-deployment --dockerfile=Dockerfile --destination=isji/myapp:1 --verbosity=info', label: 'Kaniko Build')
+                container('shell') {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'USER',
+                        passwordVariable: 'PASS'
+                    )]) {
+                        sh '''
+                        echo "$PASS" | docker login -u "$USER" --password-stdin
+                        docker push isji/myapp:${BUILD_NUMBER}
+                        '''
                     }
                 }
             }
         }
+
+        
+
+        // stage('Debug') {
+        //     steps {
+        //         container('kaniko') {
+        //             echo "Workspace is: ${WORKSPACE}"
+        //         }
+        //     }
+        // }
+
+        // stage('Build and Push Docker') {
+        //     steps {
+        //         container('kaniko') {
+        //             script {
+        //                 sh(script: '/kaniko/executor --context=dir:///home/jenkins/agent/workspace/springboot-pipeline_main/app-deployment --dockerfile=Dockerfile --destination=isji/myapp:1 --verbosity=info', label: 'Kaniko Build')
+        //             }
+        //         }
+        //     }
+        // }
 
         // stage('Build Docker') {
         //     steps {
