@@ -1,28 +1,34 @@
 pipeline {
     // agent any
 
+    // agent {
+    //     kubernetes {
+    //     yaml """
+    //         apiVersion: v1
+    //         kind: Pod
+    //         spec:
+    //         containers:
+    //         - name: kaniko
+    //           image: gcr.io/kaniko-project/executor:debug
+    //           command: ["sleep"]
+    //           args: ["9999999"]
+    //           volumeMounts:
+    //           - name: docker-config
+    //             mountPath: /kaniko/.docker
+    //         volumes:
+    //         - name: docker-config
+    //           secret:
+    //             secretName: docker-config
+    //             items:
+    //             - key: .dockerconfigjson
+    //               path: config.json
+    //     """
+    //     }
+    // }
+
     agent {
         kubernetes {
-        yaml """
-            apiVersion: v1
-            kind: Pod
-            spec:
-            containers:
-            - name: kaniko
-              image: gcr.io/kaniko-project/executor:debug
-              command: ["sleep"]
-              args: ["9999999"]
-              volumeMounts:
-              - name: docker-config
-                mountPath: /kaniko/.docker
-            volumes:
-            - name: docker-config
-              secret:
-                secretName: docker-config
-                items:
-                - key: .dockerconfigjson
-                  path: config.json
-        """
+            yamlFile 'k8s/kaniko-pod.yaml'
         }
     }
 
