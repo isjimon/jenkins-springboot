@@ -9,13 +9,11 @@ pipeline {
             spec:
             containers:
             - name: kaniko
-                image: gcr.io/kaniko-project/executor:debug
-                command:
-                - sleep
-                args: 
-                - "9999999"
-                volumeMounts:
-                - name: docker-config
+              image: gcr.io/kaniko-project/executor:debug
+              command: ["sleep"]
+              args: ["9999999"]
+              volumeMounts:
+              - name: docker-config
                 mountPath: /kaniko/.docker
             volumes:
             - name: docker-config
