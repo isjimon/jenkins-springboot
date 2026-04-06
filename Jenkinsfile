@@ -76,8 +76,7 @@ pipeline {
         stage('Debug') {
             steps {
                 container('kaniko') {
-                    sh 'echo WORKSPACE=$WORKSPACE'
-                    sh 'ls -al $WORKSPACE/app-deployment'
+                    echo "Workspace is: ${WORKSPACE}"
                 }
             }
         }

@@ -147,3 +147,6 @@ kubectl auth can-i create pods --as=system:serviceaccount:default:jenkins
 
 kubectl auth can-i create pods --as=system:serviceaccount:devops-tools:jenkins-admin
 
+kubectl set env deployment/jenkins \
+  JAVA_OPTS="-Dorg.jenkinsci.plugins.durabletask.BourneShellScript.LAUNCH_DIAGNOSTICS=true" \
+  -n devops-tools
