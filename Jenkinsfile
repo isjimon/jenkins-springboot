@@ -73,16 +73,21 @@ pipeline {
             }
         }
 
+        stage('Debug') {
+            steps {
+                container('kaniko') {
+                    sh 'echo WORKSPACE=$WORKSPACE'
+                    sh 'ls -al $WORKSPACE/app-deployment'
+                }
+            }
+        }
+
         stage('Build and Push Docker') {
             steps {
                 container('kaniko') {
-                    sh '''
-                        /kaniko/executor \
-                        --context=dir://${WORKSPACE}/app-deployment \
-                        --dockerfile=Dockerfile \
-                        --destination=isji/myapp:${BUILD_NUMBER} \
-                        --verbosity=info
-                    '''
+                    script {
+                        sh(script: '/kaniko/executor --context=dir:///home/jenkins/agent/workspace/springboot-pipeline_main/app-deployment --dockerfile=Dockerfile --destination=isji/myapp:1 --verbosity=info', label: 'Kaniko Build')
+                    }
                 }
             }
         }
