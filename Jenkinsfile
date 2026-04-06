@@ -17,11 +17,11 @@ pipeline {
                 mountPath: /kaniko/.docker
             volumes:
             - name: docker-config
-                secret:
+              secret:
                 secretName: docker-config
                 items:
                 - key: .dockerconfigjson
-                    path: config.json
+                  path: config.json
         """
         }
     }
