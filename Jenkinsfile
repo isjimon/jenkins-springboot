@@ -82,7 +82,7 @@ pipeline {
         stage('Build') {
             steps {
                 container('shell') {
-                    sh 'docker build -t isji/myapp:${BUILD_NUMBER} .'
+                    sh 'docker build -t isji/rest-api-demo:laya -f app-deployment/Dockerfile .'
                 }
             }
         }
@@ -97,7 +97,7 @@ pipeline {
                     )]) {
                         sh '''
                         echo "$PASS" | docker login -u "$USER" --password-stdin
-                        docker push isji/myapp:${BUILD_NUMBER}
+                        docker push isji/rest-api-demo:laya
                         '''
                     }
                 }
