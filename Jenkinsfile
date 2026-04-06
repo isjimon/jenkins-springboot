@@ -75,7 +75,7 @@ pipeline {
 
         stage('Build and Push Docker') {
             steps {
-                container('kaniko') {
+                container('shell') {
                     sh '''
                         /kaniko/executor \
                         --context=dir://${WORKSPACE}/app-deployment \
