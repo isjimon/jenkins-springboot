@@ -80,7 +80,8 @@ pipeline {
                         /kaniko/executor \
                         --context=dir://${WORKSPACE}/app-deployment \
                         --dockerfile=Dockerfile \
-                        --destination=isji/myapp:1
+                        --destination=isji/myapp:1 \
+                        --verbosity=info
                     '''
                 }
     
