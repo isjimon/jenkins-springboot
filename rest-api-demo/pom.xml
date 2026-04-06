@@ -54,8 +54,10 @@
 	<distributionManagement>
 		<repository>
 			<id>nexus</id>
+			<!-- $ ipconfig getifaddr en0 -->
 			<!-- <url>http://localhost:8082/repository/maven-snapshots/</url> -->
-			<url> http://192.169.8.226:8082/repository/maven-snapshots/ </url>
+			<!-- <url> http://192.169.8.226:8082/repository/maven-snapshots/ </url> -->
+			<url> http://192.168.254.108:8082/repository/maven-snapshots/ </url>
 		</repository>
 	</distributionManagement>
 
