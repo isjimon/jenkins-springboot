@@ -26,9 +26,15 @@ pipeline {
     //     }
     // }
 
+    // agent {
+    //     kubernetes {
+    //         yamlFile 'jenkins-local/jenkins-05-kanikoPod.yaml'
+    //     }
+    // }
+
     agent {
         kubernetes {
-            yamlFile 'jenkins-local/jenkins-05-kanikoPod.yaml'
+            yamlFile 'jenkins-local/jenkins-05-dindPod.yaml'
         }
     }
 
@@ -76,7 +82,7 @@ pipeline {
         stage('Build') {
             steps {
                 container('shell') {
-                sh 'docker build -t isji/myapp:${BUILD_NUMBER} .'
+                    sh 'docker build -t isji/myapp:${BUILD_NUMBER} .'
                 }
             }
         }
