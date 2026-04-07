@@ -1,37 +1,6 @@
 pipeline {
     // agent any
 
-    // agent {
-    //     kubernetes {
-    //     yaml """
-    //         apiVersion: v1
-    //         kind: Pod
-    //         spec:
-    //         containers:
-    //         - name: kaniko
-    //           image: gcr.io/kaniko-project/executor:debug
-    //           command: ["sleep"]
-    //           args: ["9999999"]
-    //           volumeMounts:
-    //           - name: docker-config
-    //             mountPath: /kaniko/.docker
-    //         volumes:
-    //         - name: docker-config
-    //           secret:
-    //             secretName: docker-config
-    //             items:
-    //             - key: .dockerconfigjson
-    //               path: config.json
-    //     """
-    //     }
-    // }
-
-    // agent {
-    //     kubernetes {
-    //         yamlFile 'jenkins-local/jenkins-05-kanikoPod.yaml'
-    //     }
-    // }
-
     agent {
         kubernetes {
             yamlFile 'jenkins-local/jenkins-05-dindPod.yaml'
@@ -79,15 +48,19 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
                 container('shell') {
-                    sh 'docker build -t isji/rest-api-demo:laya -f app-deployment/Dockerfile .'
+                    sh '''
+                    docker build -f app-deployment/Dockerfile \
+                    -t $IMAGE_NAME:$SHORT_SHA \
+                    -t $IMAGE_NAME:latest .
+                    '''
                 }
             }
         }
  
-        stage('Push') {
+        stage('Push Docker Image') {
             steps {
                 container('shell') {
                     withCredentials([usernamePassword(
@@ -97,73 +70,13 @@ pipeline {
                     )]) {
                         sh '''
                         echo "$PASS" | docker login -u "$USER" --password-stdin
-                        docker push isji/rest-api-demo:laya
+                        docker push $IMAGE_NAME:$SHORT_SHA
+                        docker push $IMAGE_NAME:latest
                         '''
                     }
                 }
             }
         }
-
-        
-
-        // stage('Debug') {
-        //     steps {
-        //         container('kaniko') {
-        //             echo "Workspace is: ${WORKSPACE}"
-        //         }
-        //     }
-        // }
-
-        // stage('Build and Push Docker') {
-        //     steps {
-        //         container('kaniko') {
-        //             script {
-        //                 sh(script: '/kaniko/executor --context=dir:///home/jenkins/agent/workspace/springboot-pipeline_main/app-deployment --dockerfile=Dockerfile --destination=isji/myapp:1 --verbosity=info', label: 'Kaniko Build')
-        //             }
-        //         }
-        //     }
-        // }
-
-        // stage('Build Docker') {
-        //     steps {
-        //         container('kaniko') {
-        //             sh '''
-        //                 /kaniko/executor \
-        //                 --context=${WORKSPACE}/rest-api-demo \
-        //                 --dockerfile=${WORKSPACE}/app-deployment/Dockerfile \
-        //                 --destination=${IMAGE_NAME} \
-        //                 --verbosity=info
-        //             '''
-        //         }
-        //     }
-        // }
-
-        // stage('Build Docker') {
-        //     steps {
-        //         sh '''
-        //         docker build -f docker/Dockerfile \
-        //         -t $IMAGE_NAME:$SHORT_SHA \
-        //         -t $IMAGE_NAME:latest .
-        //         '''
-        //     }
-        // }
-
-        // stage('Push to Dockerhub ') {
-        //     steps {
-        //         withCredentials([usernamePassword(
-        //             credentialsId: 'dockerhub-creds',
-        //             usernameVariable: 'DOCKER_USER',
-        //             passwordVariable: 'DOCKER_PASS'
-        //         )]) {
-        //             sh '''
-        //             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-
-        //             docker push $IMAGE_NAME:$SHORT_SHA
-        //             docker push $IMAGE_NAME:latest
-        //             '''
-        //         }
-        //     }
-        // }
 
         stage('Deploy to Kubernetes') {
             steps {
