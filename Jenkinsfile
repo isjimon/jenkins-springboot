@@ -82,6 +82,7 @@ pipeline {
             steps {
                 container('shell') {
                     sh "sed -i 's|BUILD_NUMBER_PLACEHOLDER|${SHORT_SHA}|g' app-deployment/k8s-deployment.yaml"
+                    sh "cat app-deployment/k8s-deployment.yaml"
                 }
                 container('kubectl') {
                     sh '''
