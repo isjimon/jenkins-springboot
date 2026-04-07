@@ -80,7 +80,13 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                echo 'Deploying app to Kubernetes cluster...'
+                container('kubectl') {
+                sh '''
+                    sed -i "s|BUILD_NUMBER_PLACEHOLDER|${SHORT_SHA}|g" app-deployment/k8s-deployment.yaml
+                    kubectl apply -f app-deployment/k8s-deployment.yaml -n devops-tools
+                    kubectl rollout status deployment/rest-api-app -n devops-tools
+                '''
+                }
             }
         }
 
