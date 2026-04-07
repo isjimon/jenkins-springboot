@@ -135,3 +135,7 @@ Manual build of docker image: `$ docker build -t isji/rest-api-demo:latest -f ap
 Manual run of docker image: `$ docker run -p 8080:8080 isji/rest-api-demo:latest`
 
 Local access: `access http://localhost:8080/api/hello`
+
+kubectl create clusterrolebinding jenkins-deploy \
+  --clusterrole=cluster-admin \
+  --serviceaccount=devops-tools:default
