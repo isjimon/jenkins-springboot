@@ -134,8 +134,17 @@ Manual build of docker image: `$ docker build -t isji/rest-api-demo:latest -f ap
 
 Manual run of docker image: `$ docker run -p 8080:8080 isji/rest-api-demo:latest`
 
+Build and push jenkins agent with docker and k8s cli:
+```
+$ docker build -f app-deployment/Dockerfile.jenkins-agent -t isji/jenkins-agent:latest .
+$ docker push isji/jenkins-agent:latest
+```
+
 Local access: `access http://localhost:8080/api/hello`
 
 kubectl create clusterrolebinding jenkins-deploy \
   --clusterrole=cluster-admin \
   --serviceaccount=devops-tools:default
+
+$ kubectl port-forward svc/rest-api-app-service 8080:8080
+

@@ -13,7 +13,7 @@ spec:
     - name: docker-storage
       mountPath: /var/lib/docker
   - name: shell
-    image: docker:24-cli
+    image: isji/jenkins-agent:latest
     env:
     - name: DOCKER_HOST
       value: tcp://localhost:2375
@@ -21,22 +21,6 @@ spec:
     - sleep
     args:
     - "9999999"
-    volumeMounts:
-    - name: workspace-volume
-      mountPath: /home/jenkins/agent
-  - name: kubectl
-    image: bitnami/kubectl:latest
-    securityContext:
-      runAsUser: 0
-    command:
-    - sleep
-    args:
-    - "9999999"
-    volumeMounts:
-    - name: workspace-volume
-      mountPath: /home/jenkins/agent
   volumes:
   - name: docker-storage
-    emptyDir: {}
-  - name: workspace-volume
     emptyDir: {}
