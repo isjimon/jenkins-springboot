@@ -84,8 +84,14 @@ pipeline {
                     sh "sed -i 's|BUILD_NUMBER_PLACEHOLDER|${SHORT_SHA}|g' app-deployment/k8s-deployment.yaml"
                     sh "cat app-deployment/k8s-deployment.yaml"
                 }
-                container('kubectl') {
+                
+                container('shell') {
                     sh '''
+                        # Install kubectl
+                        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                        chmod +x kubectl
+                        mv kubectl /usr/local/bin/kubectl
+
                         kubectl apply -f app-deployment/k8s-deployment.yaml -n devops-tools
                         kubectl rollout status deployment/rest-api-app -n devops-tools
                     '''
