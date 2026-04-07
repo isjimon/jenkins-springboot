@@ -57,6 +57,14 @@ Expose on service and access it on localhost:8081
 $ kubectl port-forward svc/jenkins-service -n devops-tools 8081:8081
 ```
 
+Additional Configuration
+1. Install Kubernetes plugin in Jenkins
+2. Install Kubernetes CLI plugin in Jenkins
+3. Configure k8s on jenkins. config > cloud > kubernetes. 
+    - Kubernetes URL: https://kubernetes.default.svc
+    - Jenkins URL: http://jenkins-service.devops-tools.svc.cluster.local:8081
+    - Jenkins Tunnel: jenkins-service.devops-tools.svc.cluster.local:50000    
+
 Enable auto trigger of pipelines in Jenkins
 
 1. Use ngrok to expose jenkins publicly
@@ -66,17 +74,22 @@ $ ngrok config add-authtoken <authtoken>
 $ ngrok http 8081
 ```
 
-Note:
-- In github repo, go setting then webhook
+2. In github repo, go setting then webhook
 ```
     https://<ngrok URL>/github-webhook/
     content-type: application/json
     Enable SSL verification
     Just the push event
 ```
+
+Additional Notes:
 - In Jenkins, no need to setup Jenkins URL, and allow anoymous access (security)
 - In Jenkins, when adding source to multibranch pipeline, make sure to select Github and NOT git
 - For maven, install mvn plugin to use mvn commands on pipeline
+- Check if jenkins can create pods: `$ kubectl auth can-i create pods --as=system:serviceaccount:devops-tools:jenkins-admin`
+- Adding of logs: `$ kubectl set env deployment/jenkins \
+  JAVA_OPTS="-Dorg.jenkinsci.plugins.durabletask.BourneShellScript.LAUNCH_DIAGNOSTICS=true" \
+  -n devops-tools`
 
 
 ### /nexus
@@ -117,22 +130,8 @@ $ NEXUS_USER=admin NEXUS_PASS=password mvn deploy --settings ./settings.xml
 ```
 
 ## /app-deployment
-```
-$ docker build -t isji/rest-api-demo .
-$ docker build -t isji/rest-api-demo:1 -f app-deployment/Dockerfile .
-$ docker run -p 8080:8080 isji/rest-api-demo
+Manual build of docker image: `$ docker build -t isji/rest-api-demo:latest -f app-deployment/Dockerfile .`
 
-```
+Manual run of docker image: `$ docker run -p 8080:8080 isji/rest-api-demo:latest`
 
-install kubernetes plugin in jenkins
-configure k8s on jenkins. config > cloud > kubernetes
-    Kubernetes URL: https://kubernetes.default.svc
-    Jenkins URL: http://jenkins-service.devops-tools.svc.cluster.local:8081
-    Jenkins Tunnel: jenkins-service.devops-tools.svc.cluster.local:50000    
-
-
-kubectl auth can-i create pods --as=system:serviceaccount:devops-tools:jenkins-admin
-
-kubectl set env deployment/jenkins \
-  JAVA_OPTS="-Dorg.jenkinsci.plugins.durabletask.BourneShellScript.LAUNCH_DIAGNOSTICS=true" \
-  -n devops-tools
+Local access: `access http://localhost:8080/api/hello`
