@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: rest-api-app
-        image: isji/myapp:BUILD_NUMBER_PLACEHOLDER
+        image: isji/rest-api-demo:BUILD_NUMBER_PLACEHOLDER
         ports:
         - containerPort: 8080
         readinessProbe:

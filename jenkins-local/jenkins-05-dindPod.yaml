@@ -21,6 +21,9 @@ spec:
     - sleep
     args:
     - "9999999"
+    volumeMounts:
+    - name: workspace-volume
+      mountPath: /home/jenkins/agent
   - name: kubectl
     image: bitnami/kubectl:latest
     securityContext:
@@ -29,6 +32,11 @@ spec:
     - sleep
     args:
     - "9999999"
+    volumeMounts:
+    - name: workspace-volume
+      mountPath: /home/jenkins/agent
   volumes:
   - name: docker-storage
+    emptyDir: {}
+  - name: workspace-volume
     emptyDir: {}
