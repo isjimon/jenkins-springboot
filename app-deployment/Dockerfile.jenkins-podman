@@ -1,0 +1,57 @@
+FROM debian:bookworm-slim
+
+# ── System deps ────────────────────────────────────────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    gnupg \
+    uidmap \
+    fuse-overlayfs \
+    slirp4netns \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Podman ─────────────────────────────────────────────────────────────────────
+RUN curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/Release.key \
+      | gpg --dearmor -o /usr/share/keyrings/podman.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/podman.gpg] \
+      https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/ /" \
+      > /etc/apt/sources.list.d/podman.list && \
+    apt-get update && apt-get install -y --no-install-recommends \
+    podman \
+    buildah \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── kubectl ────────────────────────────────────────────────────────────────────
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    chmod +x kubectl && \
+    mv kubectl /usr/local/bin/kubectl
+
+# ── Podman rootless config ─────────────────────────────────────────────────────
+RUN useradd -m -u 1000 jenkins && \
+    mkdir -p /home/jenkins/.config/containers
+
+# storage.conf — use vfs driver (safe default for containers-in-containers)
+RUN cat <<EOF > /home/jenkins/.config/containers/storage.conf
+[storage]
+  driver = "vfs"
+  runroot = "/run/user/1000/containers"
+  graphroot = "/home/jenkins/.local/share/containers/storage"
+EOF
+
+# registries.conf — add Docker Hub as default search registry
+RUN cat <<EOF > /home/jenkins/.config/containers/registries.conf
+[registries.search]
+  registries = ["docker.io", "quay.io"]
+EOF
+
+RUN chown -R jenkins:jenkins /home/jenkins
+
+# ── Subuid/subgid for rootless ─────────────────────────────────────────────────
+RUN echo "jenkins:100000:65536" >> /etc/subuid && \
+    echo "jenkins:100000:65536" >> /etc/subgid
+
+USER jenkins
+WORKDIR /home/jenkins
+
+# Sanity checks
+RUN podman --version && kubectl version --client

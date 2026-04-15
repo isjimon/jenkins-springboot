@@ -148,3 +148,12 @@ kubectl create clusterrolebinding jenkins-deploy \
 
 $ kubectl port-forward svc/rest-api-app-service 8080:8080
 
+PODMANM
+
+$ podman machine podman system connection list
+$ podman machine start <machine-name>
+e.g. $ podman machine start podman-machine-default
+
+Manual build of podman image: `$ podman build -t isji/rest-api-demo:podman -f app-deployment/Containerfile .`
+
+Manual run of podman image: `$ podman run -p 8080:8080 isji/rest-api-demo:podman`
