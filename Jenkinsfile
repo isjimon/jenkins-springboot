@@ -66,7 +66,7 @@ pipeline {
                     steps {
                         container('podman') {
                             sh '''
-                            podman build -f app-deployment/Dockerfile \
+                            podman build -f app-deployment/Containerfile \
                             -t $IMAGE_NAME:$SHORT_SHA-podman \
                             -t $IMAGE_NAME:latest-podman .
                             '''
