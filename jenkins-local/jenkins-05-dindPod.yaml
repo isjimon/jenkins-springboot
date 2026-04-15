@@ -21,6 +21,19 @@ spec:
     - sleep
     args:
     - "9999999"
+  - name: podman                         
+    image: quay.io/podman/stable:latest
+    command:
+    - sleep
+    args:
+    - "9999999"
+    securityContext:
+      privileged: true                    # required for podman in k8s
+    volumeMounts:
+    - name: podman-storage
+      mountPath: /var/lib/containers     # podman's image storage
   volumes:
   - name: docker-storage
+    emptyDir: {}
+  - name: podman-storage                 
     emptyDir: {}

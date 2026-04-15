@@ -48,17 +48,35 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                container('shell') {
-                    sh '''
-                    docker build -f app-deployment/Dockerfile \
-                    -t $IMAGE_NAME:$SHORT_SHA \
-                    -t $IMAGE_NAME:latest .
-                    '''
+        stage('Build Image') {
+            parallel {
+                stage('Build Docker Image') {
+                    steps {
+                        container('shell') {
+                            sh '''
+                            docker build -f app-deployment/Dockerfile \
+                            -t $IMAGE_NAME:$SHORT_SHA \
+                            -t $IMAGE_NAME:latest .
+                            '''
+                        }
+                    }
                 }
+
+                stage('Build Podman Image') {
+                    steps {
+                        container('podman') {
+                            sh '''
+                            podman build -f app-deployment/Dockerfile \
+                            -t $IMAGE_NAME:$SHORT_SHA-podman \
+                            -t $IMAGE_NAME:latest-podman .
+                            '''
+                        }
+                    }
+                }
+            
             }
         }
+        
  
         stage('Push Docker Image') {
             steps {
