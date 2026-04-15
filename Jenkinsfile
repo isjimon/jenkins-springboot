@@ -66,7 +66,8 @@ pipeline {
                     steps {
                         container('podman') {
                             sh '''
-                            podman build -f app-deployment/Containerfile \
+                            podman build --storage-opt driver=vfs \
+                            -f app-deployment/Containerfile \
                             -t $IMAGE_NAME:$SHORT_SHA-podman \
                             -t $IMAGE_NAME:latest-podman .
                             '''
